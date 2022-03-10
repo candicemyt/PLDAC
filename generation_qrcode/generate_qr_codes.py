@@ -173,13 +173,20 @@ def draw_qrcodes(qr_codes,outline):
     d.save()
 
 
+
+
+
 ####################### generation qr_codes optimaux ############################
 
 
 id_qr_code, qr_codes = binary_qrcode(3, 8)
 outline = 2
 draw_qrcodes(qr_codes[1::], outline=outline)
+import nazca as nd
 
+nd.image(f"out/qr_codes_{outline}outlinev2.svg").put()
+
+nd.export_gds()
 
 
 ############ etude des qr codes optimaux #############

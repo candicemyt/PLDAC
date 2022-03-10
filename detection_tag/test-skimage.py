@@ -13,7 +13,7 @@ from math import pi
 
 ######## pre traitement de l'image #########
 
-image = imread("images_tests/qrfourmis1.png")
+image = imread("images_tests/4tagsfourmis.png")
 #image_g = rgb2gray(image)
 #binarisation
 thresh = threshold_mean(image)
@@ -45,23 +45,35 @@ imshow(image)
 
 #traitement des regions detectees
 num_detect = 1
+
 for qr_code in qrcodes_potentiels:
     qr_code_image = qr_code[0]
     coord_qr_code = qr_code[1]
     orientation_qr_code = qr_code[2]
-
+    mat_qr_code = []
     # affichage regions detectees
-    plt.figure()
-    plt.title(f"Detection {num_detect}")
-    imshow(qr_code_image)
+    #plt.figure()
+    #plt.title(f"Detection {num_detect}")
+    #imshow(qr_code_image)
 
     #re orientation des regions detectees
     plt.figure()
     plt.title(f"Detection {num_detect} pivotée")
     qr_code_image_rotate = rotate(qr_code_image, 360 - round(orientation_qr_code, 1)*180/pi)
     imshow(qr_code_image_rotate)
-    num_detect+=1
 
+    test = np.array_split(qr_code_image_rotate, 7, axis=0)
 
+    for line in test:
+        line_qr_code = []
+        for pixel in np.array_split(line, 6, axis=1):
+            tmp = np.where(pixel == True, -1, 1)
+            if np.sum(tmp) < 0:
+                line_qr_code.append(0)
+            else:
+                line_qr_code.append(1)
+        mat_qr_code.append(line_qr_code)
+    print(f'matrice binaire detection {num_detect}: ' , mat_qr_code)
+    num_detect += 1
 plt.show()
 
