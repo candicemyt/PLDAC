@@ -174,8 +174,6 @@ def draw_qrcodes(qr_codes,outline, spacing):
 
 
 
-
-
 ####################### generation qr_codes optimaux ############################
 
 
@@ -183,7 +181,6 @@ id_qr_code, qr_codes = binary_qrcode(3, 8)
 outline = 2
 #espacements : grand = (2,2), moyen = (1, 1.8), petit = (0.5, 1.6)
 draw_qrcodes(qr_codes[1::], outline=outline,spacing=(1,1.8))
-
 
 
 ############ etude des qr codes optimaux #############
