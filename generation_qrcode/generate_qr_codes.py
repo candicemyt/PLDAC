@@ -70,7 +70,7 @@ def binary_qrcode(h_distance, nb_bit):
 
 
 
-def draw_qrcodes(qr_codes,outline):
+def draw_qrcodes(qr_codes,outline, spacing):
 
     #reformatage des qr codes en matrice
     shape = len(qr_codes[0][0][0])
@@ -87,11 +87,11 @@ def draw_qrcodes(qr_codes,outline):
 
 
     #initialisation du fichier svg
-    d = svg.Drawing(filename=f"out/qr_codes_{outline}outlinev2.svg", size=("2000px", "2000px"))
+    d = svg.Drawing(filename=f"out/qr_codes_{outline}outlinev3.svg", size=("2000px", "2000px"))
     size = 10   #taille des bits
     cpt = 0     #compteur permettant la disposition des qr codes dans le fichier
     cpt_outline = 0     #compteur permettant de calibrer correctement les contours
-    x = size*5*((cpt//16) + 1)*2    #abscisses du bit a dessiner
+    x = size*5*((cpt//16) + 1)*spacing[1] #abscisses du bit a dessiner (1.8 = gestion de l'espacement entre les colonnes de qr_codes)
     y = size*5  #ordonnée du bit a dessiner
 
 
@@ -142,7 +142,7 @@ def draw_qrcodes(qr_codes,outline):
                     d.add(d.rect(insert=(x, y), size=(size, size), fill='white'))
                 else:
                     d.add(d.rect(insert=(x, y), size=(size, size), fill='white'))
-                    d.add(d.rect(insert=(x, y+(size/2)), size=(size, size/2), fill='black'))
+                    d.add(d.rect(insert=(x, y+(size*1/4)), size=(size, size*3/4), fill='black'))
                 x += size
 
             if outline == 2: #pour deux contours on ajoute un bit blanc a la fin de chaque ligne
@@ -158,16 +158,16 @@ def draw_qrcodes(qr_codes,outline):
                 x += size
 
             y += size   #a la fin de chaque ligne on augmente l'ordonnee pour passer a la ligne suivante
-            x = size*5*((cpt//16) + 1)*2    #on remet x a sa valeur d'initialisation
+            x = size*5*((cpt//16) + 1) *spacing[1]  #on remet x a sa valeur d'initialisation (1.8 = gestion de l'espacement entre les colonnes de qr_codes)
 
         cpt_outline = 0 #gestion des bits noirs aux coins
-        # gestion du placement des qr_codes dans el fichier
+        # gestion du placement des qr_codes dans le fichier
         cpt += 1
         if cpt % 16 == 0:   #on fait des lignes de 16 (16*16=256)
             y = size*5  #valeur initaiale du y
-            x = size*5*((cpt//16) + 1)*2    #nouvelle abscisse pour la prochaine colonne
+            x = size*5*((cpt//16) + 1 ) *spacing[1]  #nouvelle abscisse pour la prochaine colonne (1.8 = gestion de l'espacement entre les colonnes de qr_codes)
         else:
-            y += size*2 #espacement entre les qr_codes
+            y += size * spacing[0]#espacement entre les lignes de qr_codes
 
     #sauvegarde du fichier
     d.save()
@@ -181,12 +181,9 @@ def draw_qrcodes(qr_codes,outline):
 
 id_qr_code, qr_codes = binary_qrcode(3, 8)
 outline = 2
-draw_qrcodes(qr_codes[1::], outline=outline)
-import nazca as nd
+#espacements : grand = (2,2), moyen = (1, 1.8), petit = (0.5, 1.6)
+draw_qrcodes(qr_codes[1::], outline=outline,spacing=(1,1.8))
 
-nd.image(f"out/qr_codes_{outline}outlinev2.svg").put()
-
-nd.export_gds()
 
 
 ############ etude des qr codes optimaux #############
