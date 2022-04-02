@@ -1,25 +1,35 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.filters import threshold_mean
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops, find_contours
-from skimage.morphology import closing, square
-from skimage.color import label2rgb, rgb2gray
+from skimage.measure import label, regionprops
 from skimage.io import imread, imshow
-from skimage.feature import canny, blob_log, corner_peaks, corner_harris, corner_subpix
-from skimage.transform import resize, warp_coords, rotate
+from skimage.transform import rotate
 from math import pi
+from analyse_qrcode.analyse_qr import analyse
 
+def split(qr_code_image_rotate,col=6,lin=7):
+    mat_qr_code=[]
+    test = np.array_split(qr_code_image_rotate, lin, axis=0)
+    for line in test:
+        line_qr_code = []
+        for pixel in np.array_split(line, col, axis=1):
+            tmp = np.where(pixel == True, -1, 1)
+            if np.sum(tmp) < -2:
+                line_qr_code.append(0)
+            else:
+                line_qr_code.append(1)
+        mat_qr_code.append(line_qr_code)
+    return np.array(mat_qr_code)
 
 ######## pre traitement de l'image #########
 
 image = imread("images_tests/4tagsfourmis.png")
+#image=imread("images_tests/planche_test.png")
 #image_g = rgb2gray(image)
 #binarisation
 thresh = threshold_mean(image)
 binary = image > thresh
 binary = binary[:,:,0]
-
 
 ############ detection avec regionprops ##############
 
@@ -45,7 +55,6 @@ imshow(image)
 
 #traitement des regions detectees
 num_detect = 1
-
 for qr_code in qrcodes_potentiels:
     qr_code_image = qr_code[0]
     coord_qr_code = qr_code[1]
@@ -59,21 +68,28 @@ for qr_code in qrcodes_potentiels:
     #re orientation des regions detectees
     plt.figure()
     plt.title(f"Detection {num_detect} pivotée")
+    """if orientation_qr_code<0.2 and orientation_qr_code>-0.2:
+        qr_code_image_rotate = qr_code_image
+    else:"""
     qr_code_image_rotate = rotate(qr_code_image, 360 - round(orientation_qr_code, 1)*180/pi)
     imshow(qr_code_image_rotate)
-
-    test = np.array_split(qr_code_image_rotate, 7, axis=0)
-
-    for line in test:
-        line_qr_code = []
-        for pixel in np.array_split(line, 6, axis=1):
-            tmp = np.where(pixel == True, -1, 1)
-            if np.sum(tmp) < 0:
-                line_qr_code.append(0)
-            else:
-                line_qr_code.append(1)
-        mat_qr_code.append(line_qr_code)
-    print(f'matrice binaire detection {num_detect}: ' , mat_qr_code)
+    mat_qr_code=split(qr_code_image_rotate)
+    if mat_qr_code[:, 0].sum() > 2 and mat_qr_code[:, 5].sum()> 2:
+        if mat_qr_code[0].sum() > 2 and mat_qr_code[6].sum() > 2:
+            mat_qr_code = split(qr_code_image_rotate, lin=9,col=8)
+        else:
+            mat_qr_code=split(qr_code_image_rotate,col=8)
+        if mat_qr_code.shape[1]-6!=0:
+            mat_qr_code = mat_qr_code[:, 1:-1]
+            if mat_qr_code.shape[0]-7!=0:
+                mat_qr_code = mat_qr_code[1:-1,:]
+    mat_qr_code=mat_qr_code[1:-1,1:-1].tolist()
+    print(f'matrice binaire detection {num_detect}: ', mat_qr_code)
+    plt.figure()
+    plt.title(f"matrice binaire detection {num_detect}")
+    plt.imshow(np.array(mat_qr_code),cmap='Greys')
     num_detect += 1
+    print(analyse(mat_qr_code))
 plt.show()
+
 
