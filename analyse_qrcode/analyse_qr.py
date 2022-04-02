@@ -16,5 +16,5 @@ def analyse(qr_code_analyse):
             print("il y a des erreurs dans le QR code, on va vériier les bits de parité")
     #print("on vas faire une rotation de 180 degré")
     return  -1
-print(valid_codes[120])
+#test
 print(analyse([[1,1,1,1],[0,0,0,0],[1,1,1,1],[1,1,0,1],[1,1,0,0]]))

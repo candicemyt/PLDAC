@@ -68,9 +68,6 @@ for qr_code in qrcodes_potentiels:
     #re orientation des regions detectees
     plt.figure()
     plt.title(f"Detection {num_detect} pivotée")
-    """if orientation_qr_code<0.2 and orientation_qr_code>-0.2:
-        qr_code_image_rotate = qr_code_image
-    else:"""
     qr_code_image_rotate = rotate(qr_code_image, 360 - round(orientation_qr_code, 1)*180/pi)
     imshow(qr_code_image_rotate)
     mat_qr_code=split(qr_code_image_rotate)
@@ -89,7 +86,7 @@ for qr_code in qrcodes_potentiels:
     plt.title(f"matrice binaire detection {num_detect}")
     plt.imshow(np.array(mat_qr_code),cmap='Greys')
     num_detect += 1
-    print(analyse(mat_qr_code))
+    #print(analyse(mat_qr_code))
 plt.show()
 
 
