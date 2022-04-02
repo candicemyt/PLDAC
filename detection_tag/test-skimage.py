@@ -5,7 +5,6 @@ from skimage.measure import label, regionprops
 from skimage.io import imread, imshow
 from skimage.transform import rotate
 from math import pi
-from analyse_qrcode.analyse_qr import analyse
 
 def split(qr_code_image_rotate,col=6,lin=7):
     mat_qr_code=[]
