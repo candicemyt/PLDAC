@@ -1,6 +1,23 @@
 from scipy.spatial.distance import hamming
 import svgwrite as svg
 
+def bit_parity(qr_code):
+    """renvoie les bits de parité pour une matrice identité"""
+    parity = []
+    for line in qr_code[0]:  # un bit de parite par ligne
+        if sum(line) % 2 == 0:
+            parity.append(0)
+        else:
+            parity.append(1)
+    for i in range(len(line)):  # un bit de parite par colonne de
+        column = [row[i] for row in qr_code[0]]
+        if sum(column) % 2 == 0:
+            parity.append(0)
+        else:
+            parity.append(1)
+    return parity
+
+
 def binary_qrcode(h_distance, nb_bit):
     """renvoie des qr codes sous forme de liste de 0 et 1
     avec nb_bit d'informartions (doit etre pair ou divisible par 3)
@@ -36,21 +53,7 @@ def binary_qrcode(h_distance, nb_bit):
     for k in range(len(qr_codes)):
 
         #ajout des bits de parite
-        parity = []
-        for line in qr_codes[k][0]:     #un bit de parite par ligne
-
-            if sum(line) % 2 == 0:
-                parity.append(0)
-            else:
-                parity.append(1)
-
-        for i in range(len(line)):  #un bit de parite par colonne de
-            column = [row[i] for row in qr_codes[k][0]]
-            if sum(column) % 2 == 0:
-                parity.append(0)
-            else:
-                parity.append(1)
-
+        parity = bit_parity(qr_codes[k])
         qr_codes[k].append(parity)
         qr_codes[k].append(parity[::-1])    #ajout de l'inverse des bits de parite
         flat_qr_codes[k] += parity + parity[::-1]

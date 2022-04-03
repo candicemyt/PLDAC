@@ -1,5 +1,5 @@
 import numpy as np
-from generation_qrcode.generate_qr_codes import binary_qrcode
+from generation_qrcode.generate_qr_codes import binary_qrcode, bit_parity
 
 id_qr_code, valid_codes =binary_qrcode(3, 8)
 
@@ -7,6 +7,12 @@ def correction(qr_code_analyse,err):
     """corrige le QR code à partir d'une liste d'erreur err"""
     res=qr_code_analyse.copy()
     #on regarde où est le bit érroné
+    if err[-1]==1 and sum(err[:-1])==0:
+        # le problème correspond aux bits de parité
+        # on calcul la matrice de bits de parité en fonction de la matrice identité
+        par=bit_parity([qr_code_analyse[0]])
+        res[1]=par
+        res[2]=np.split(par)
     if err[-1]==0:
         #le problème correspond à la matrice identité
         #on récuère la ligne et la colonne du pixel qui pose pb
@@ -14,9 +20,6 @@ def correction(qr_code_analyse,err):
         c=err[2:6].index(1)
         #on change la valeur du bit
         res[0][l][c]=abs(res[0][l][c]-1)
-    else:
-        #le problème correspond aux bits de parité
-        res=res
     return res
 
 def erreurs(qr_code_analyse):
@@ -90,9 +93,9 @@ def analyse(qr_code):
 
 #test
 if __name__ == '__main__':
-    c= [[0,0,1,1],[1,0,1,1],[1,1,1,1],[0,0,0,0],[1,1,1,1]]
+    """c= [[0,0,1,1],[1,0,1,1],[1,1,1,1],[0,0,0,0],[1,1,1,1]]
     print(analyse(c))
     new_c = np.flip(c).tolist()
-    print(analyse(new_c))
-    c= [[0, 0, 1, 1], [0, 0, 1, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    print(analyse(new_c))"""
+    c= [[1, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0]]
     print(analyse(c))

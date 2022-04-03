@@ -55,6 +55,7 @@ imshow(image)
 
 #traitement des regions detectees
 num_detect = 1
+reel_qr_code=[]
 for qr_code in qrcodes_potentiels:
     qr_code_image = qr_code[0]
     coord_qr_code = qr_code[1]
@@ -87,6 +88,9 @@ for qr_code in qrcodes_potentiels:
     plt.imshow(np.array(mat_qr_code),cmap='Greys')
     num_detect += 1
     print(analyse(mat_qr_code))
+    if analyse(mat_qr_code)>-1:
+        reel_qr_code.append(analyse(mat_qr_code))
 plt.show()
+print(reel_qr_code)
 
 
