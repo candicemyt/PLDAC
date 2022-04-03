@@ -87,9 +87,10 @@ for qr_code in qrcodes_potentiels:
     plt.title(f"matrice binaire detection {num_detect}")
     plt.imshow(np.array(mat_qr_code),cmap='Greys')
     num_detect += 1
-    print(analyse(mat_qr_code))
-    if analyse(mat_qr_code)>-1:
-        reel_qr_code.append(analyse(mat_qr_code))
+    _id=analyse(mat_qr_code)
+    print(_id)
+    if _id>-1:
+        reel_qr_code.append(_id)
 plt.show()
 print(reel_qr_code)
 

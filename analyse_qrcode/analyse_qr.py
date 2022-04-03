@@ -93,9 +93,9 @@ def analyse(qr_code):
 
 #test
 if __name__ == '__main__':
-    """c= [[0,0,1,1],[1,0,1,1],[1,1,1,1],[0,0,0,0],[1,1,1,1]]
+    c= [[0,0,1,1],[1,0,1,1],[1,1,1,1],[0,0,0,0],[1,1,1,1]]
     print(analyse(c))
     new_c = np.flip(c).tolist()
-    print(analyse(new_c))"""
+    print(analyse(new_c))
     c= [[1, 0, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0]]
     print(analyse(c))
