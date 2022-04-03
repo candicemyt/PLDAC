@@ -5,6 +5,7 @@ from skimage.measure import label, regionprops
 from skimage.io import imread, imshow
 from skimage.transform import rotate
 from math import pi
+from analyse_qrcode.analyse_qr import analyse
 
 def split(qr_code_image_rotate,col=6,lin=7):
     mat_qr_code=[]
@@ -85,7 +86,7 @@ for qr_code in qrcodes_potentiels:
     plt.title(f"matrice binaire detection {num_detect}")
     plt.imshow(np.array(mat_qr_code),cmap='Greys')
     num_detect += 1
-    #print(analyse(mat_qr_code))
+    print(analyse(mat_qr_code))
 plt.show()
 
 
