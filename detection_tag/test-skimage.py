@@ -24,7 +24,7 @@ def split(qr_code_image_rotate,col=6,lin=7):
 ######## pre traitement de l'image #########
 
 image = imread("images_tests/4tagsfourmis.png")
-#image_g = rgb2gray(image)
+#image = imread("images_tests/12-04-2022-Manip-52-tags4.png")
 #binarisation
 thresh = threshold_mean(image)
 binary = image > thresh
