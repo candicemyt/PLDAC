@@ -58,7 +58,7 @@ def binary_qrcode(h_distance, nb_bit):
 
         # hamming distance
         len_id_v_qr_code = len(id_v_qr_code)
-        add = True  #booleen indiquant si le qr_code est valide (hamming distance entre lui et tous ceux deja valide inferieure a h_distance)
+        add = True  #booleen indiquant si le qr_code est valide (hamming distance entre lui et tous ceux deja valides inferieure a h_distance)
         for index in range(len_id_v_qr_code):
             if hamming(flat_qr_codes[id_v_qr_code[index]], flat_qr_codes[k]) * len(flat_qr_codes[k]) <= h_distance:
                 add = False
@@ -172,31 +172,31 @@ def draw_qrcodes(qr_codes,outline, spacing):
     #sauvegarde du fichier
     d.save()
 
+if __name__ == 'main':
+
+    ####################### generation qr_codes optimaux ############################
 
 
-####################### generation qr_codes optimaux ############################
+    id_qr_code, qr_codes = binary_qrcode(3, 8)
+    outline = 2
+    #espacements : grand = (2,2), moyen = (1, 1.8), petit = (0.5, 1.6)
+    draw_qrcodes(qr_codes[1::], outline=outline,spacing=(1,1.8))
 
 
-id_qr_code, qr_codes = binary_qrcode(3, 8)
-outline = 2
-#espacements : grand = (2,2), moyen = (1, 1.8), petit = (0.5, 1.6)
-draw_qrcodes(qr_codes[1::], outline=outline,spacing=(1,1.8))
+    ############ etude des qr codes optimaux #############
+
+    # for h_distance in range(2,5):
 
 
-############ etude des qr codes optimaux #############
-
-# for h_distance in range(2,5):
-
-
-#     for nb_bit in [6,8,9]:
-#         id_qr_code, qr_codes = qrcode(h_distance, nb_bit)
-#         print('---------------\t', nb_bit, ' bits avec une hamming distance de ', h_distance, '\t---------------\n')
-#         print('\t ', len(id_qr_code), ' QR codes\n')
-#         f = open(f"QR_codes_{nb_bit}bits_{h_distance}distance.txt", 'w')
-#         for qr_code in qr_codes:
-#             f.write(str(qr_code) +'\n')
-#         #print(id_qr_code, '\n', qr_codes,'\n\n')
+    #     for nb_bit in [6,8,9]:
+    #         id_qr_code, qr_codes = qrcode(h_distance, nb_bit)
+    #         print('---------------\t', nb_bit, ' bits avec une hamming distance de ', h_distance, '\t---------------\n')
+    #         print('\t ', len(id_qr_code), ' QR codes\n')
+    #         f = open(f"QR_codes_{nb_bit}bits_{h_distance}distance.txt", 'w')
+    #         for qr_code in qr_codes:
+    #             f.write(str(qr_code) +'\n')
+    #         #print(id_qr_code, '\n', qr_codes,'\n\n')
 
 
-# id_qr_code, qr_codes = qrcode(6, 8)
-# print('\t ', len(id_qr_code), ' QR codes\n')
+    # id_qr_code, qr_codes = qrcode(6, 8)
+    # print('\t ', len(id_qr_code), ' QR codes\n')
