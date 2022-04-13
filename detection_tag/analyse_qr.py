@@ -5,6 +5,22 @@ id_qr_code, valid_codes =binary_qrcode(3, 8)
 
 #todo renommer les variables avec des noms siginificatifs
 
+def bit_parity(qr_code):
+    """renvoie les bits de parité pour une matrice identité"""
+    parity = []
+    for line in qr_code[0]:  # un bit de parite par ligne
+        if sum(line) % 2 == 0:
+            parity.append(0)
+        else:
+            parity.append(1)
+    for i in range(len(line)):  # un bit de parite par colonne de
+        column = [row[i] for row in qr_code[0]]
+        if sum(column) % 2 == 0:
+            parity.append(0)
+        else:
+            parity.append(1)
+    return parity
+
 def correction(qr_code_analyse,err):
     """
     Corrige le QR code à partir d'une liste d'erreur err
@@ -99,14 +115,18 @@ def analyse(qr_code):
     Essaie de déterminer l'identité d'un qr code
     fait une rotation de 180° si nécessaire
     """
+    #on fait l'analyse dans un sens
     c=analyse_unidirectionnel(qr_code)
+    #si on a trouvé un id on s'arrête et on le renvoit
     if c >= 0:
         return c
-    #on fait une rotation de 180 degré
+    #sinon on fait une rotation de 180 degré et on fait l'analyse correspondante
     new_qr_code=np.flip(qr_code).tolist()
     c = analyse_unidirectionnel(new_qr_code)
     if c >= 0:
         return c
+    #les deux analyses n'ont pas marchées
+    # il y a trop d'erreurs dans le QR code ou alors le qr-code n'en est pas un
     print("Trop d'erreurs dans le QR code")
     return -1
 
