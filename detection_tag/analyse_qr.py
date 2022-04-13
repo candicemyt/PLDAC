@@ -3,7 +3,6 @@ from generation_qrcode.generate_qr_codes import binary_qrcode
 
 id_qr_code, valid_codes =binary_qrcode(3, 8)
 
-#todo renommer les variables avec des noms siginificatifs
 
 def bit_parity(qr_code):
     """renvoie les bits de parité pour une matrice identité"""
@@ -49,7 +48,6 @@ def erreurs(qr_code_analyse):
     """
     Détermine les erreurs présentes dans le QR code
     """
-
     erreurs=[]
     #on teste les lignes
     for l in range(2):
@@ -67,7 +65,6 @@ def erreurs(qr_code_analyse):
         else:
             erreurs.append(1)
     #on teste la matrice de parité inverse
-    #todo régler ce problème !!
     inv = sum(np.flip(qr_code_analyse[1])==qr_code_analyse[2])
     if inv == 6:
         erreurs.append(0)
@@ -79,7 +76,6 @@ def in_liste_valide(qr_code_analyse):
     """
     Détermine si un qr_code est dans la liste de QR codes valides
     """
-
     for i in id_qr_code:
         if valid_codes[i] == qr_code_analyse:
             return i
@@ -87,19 +83,24 @@ def in_liste_valide(qr_code_analyse):
 
 def analyse_unidirectionnel(qr_code):
     """
-    Tente de déterminer l'identité d'un qr code
+    Tente de déterminer l'identité d'un qr code dans une direction
     fait une correction d'un bit si nécessaire
     """
-
+    #on recupere la matrice identite
     id = qr_code[0:2]
     par = qr_code[2:]
+    #on recupere la matrice de parité
     par1 = par[0] + par[1][0:2]
+    #on recupere la matrice de parité inverse
     par2 = par[1][2:] + par[2]
+    #on met le tout sous forme de liste
     qr_code_analyse = [id, par1, par2]
+    #on regarde si le QR code fait partie des qr_code valides
     c = in_liste_valide(qr_code_analyse)
+    #si c'est le cas on retourne l'id du qr code
     if c >= 0:
         return c
-    #il y a des erreurs dans le QR code, on regarde où elles sont
+    #sinon il y a des erreurs dans le QR code, on regarde où elles sont
     err = erreurs(qr_code_analyse)
     #si il y a plus d'une erreur on s'arrête
     #1 bit erreur dans le QR code correspond à 1 ou 2 erreurs dans err
@@ -114,6 +115,7 @@ def analyse(qr_code):
     """
     Essaie de déterminer l'identité d'un qr code
     fait une rotation de 180° si nécessaire
+    => renvoie l'id du qr_code, et -1 sinon
     """
     #on fait l'analyse dans un sens
     c=analyse_unidirectionnel(qr_code)
