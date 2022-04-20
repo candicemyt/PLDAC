@@ -1,18 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from tslearn.utils import to_time_series
-from tslearn.clustering import TimeSeriesKMeans
-from sklearn.model_selection import train_test_split
 
-data = pd.read_csv('jaguar_movement_data.csv',parse_dates=True,index_col='timestamp',usecols=[1,2,3,6])
-print(data.columns)
-data_i1 = data[data['individual.local.identifier (ID)'] == 1]
-data_i1.pop('individual.local.identifier (ID)')
-print(data_i1)
-#X_train, y_train, X_test, y_test = train_test_split(data)
-# km = TimeSeriesKMeans(n_clusters=3, metric="dtw", max_iter=10)
-# km.fit(data[0:1000])
-# pred = km.predict(data[1001:1101])
-# print(pred)
-#
+
+df = pd.read_csv('data_ant.csv')
+df = df.rename(columns={"file_name": "num_frame"})
+
+df1 = df[df['colony'] == 'N2']
+df1.pop('colony')
+df2 = df[df['colony'] == 'N13']
+df2.pop('colony')
+df3 = df[df['colony'] == 'N4']
+df3.pop('colony')
+
+#todo merge les colonnes date et num_frame pour avoir des timestamp exploitables
+df1_ant1 = df1[df1['ant_id'] == 1]
+df1_ant1.sort_values(by=['num_frame'], ascending=False)
+print(df1_ant1)
