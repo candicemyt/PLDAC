@@ -3,21 +3,23 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-df = pd.read_csv('data_ant.csv')
-print(df.columns)
-df = df.rename(columns={"file_name": "num_frame"})
-df['num_frame'] = df['num_frame']/30
-dates = set(df['date'])
-colonies = set(df['colony'])
-data = []
-for d in dates:
-    df_date = df[df['date'] == d]
-    df_date.pop('date')
-    for c in colonies:
-        df_col = df_date[df_date['colony'] == c]
-        df_col.pop('colony')
-        data.append(df_col)
-print(data[0])
+df1 = pd.read_csv('data_ant_m1.csv')
+df2 = pd.read_csv('data_ant_m2.csv')
+print(df1.columns)
+print(df2.columns)
+# df = df.rename(columns={"file_name": "num_frame"})
+# df['num_frame'] = df['num_frame']/30
+# dates = set(df['date'])
+# colonies = set(df['colony'])
+# data = []
+# for d in dates:
+#     df_date = df[df['date'] == d]
+#     df_date.pop('date')
+#     for c in colonies:
+#         df_col = df_date[df_date['colony'] == c]
+#         df_col.pop('colony')
+#         data.append(df_col)
+# print(data[0])
 
 
 
