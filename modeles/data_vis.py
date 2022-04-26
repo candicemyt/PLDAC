@@ -59,29 +59,54 @@ def interaction_mat(distance, time, df):
         for j in range(i + 1, len(list_df_ants)):
             l = dict_ids[list(list_df_ants[i]['ant_id'])[0]]
             k = dict_ids[list(list_df_ants[j]['ant_id'])[0]]
-            mat_interactions[l][k] = interaction_ant2ant(list_df_ants[i], list_df_ants[j], distance, time)
-
+            val = interaction_ant2ant(list_df_ants[i], list_df_ants[j], distance, time) + 1
+            mat_interactions[l][k] = val
+            mat_interactions[k][l] = val
     return mat_interactions
 
 
 def mat2graph(mat,m):
+    """
+    Cretion du graphe correspondant à la matrice mat et à la video numero m
+    """
     rows, cols = np.where(mat > 0)
     edges = zip(rows.tolist(), cols.tolist())
+    weighted_edges = []
+    for r, c in edges:
+        w = mat[r,c]
+        if w != 1:
+            weighted_edges.append((r,c,w))
+    nodes = np.arange(np.shape(mat)[0])
+
     gr = nx.Graph()
-    #gr.add_nodes_from(np.arange(np.shape(mat)[0]))
-    gr.add_edges_from(edges)
-    dict_labels = ant_id2node_id(np.concatenate((rows, cols)))
+    gr.add_nodes_from(nodes)
+    gr.add_weighted_edges_from(weighted_edges)
+    dict_labels = ant_id2node_id(nodes)
+
     plt.figure()
     ax = plt.gca()
     ax.set_title(f"Graphe d'intéractions pour le film {m}")
-    nx.draw(gr, node_size=500, labels=dict_labels, with_labels=True, ax=ax)
+    pos = nx.spring_layout(gr, k=1/np.sqrt(len(nodes)/4))
+    edge_labels = nx.get_edge_attributes(gr, 'weight')
+    nx.draw(gr, node_size=500, labels=dict_labels, with_labels=True, ax=ax, pos=pos)
+    nx.draw_networkx_edge_labels(gr, edge_labels=edge_labels, pos=pos)
+    plt.savefig(f'out/graphe_interactions_m{m}.pdf')
     plt.show()
     return gr
 
+#todo finir la fonction
+def viz_traj(df):
+    ant_ids = set(df['ant_id'])
+    list_df_ants = []
+    for i in ant_ids:
+        df_ant = df[df['ant_id'] == i]
+        plt.plot(list(df_ant['x']), list(df_ant['y']), color=f'#77a{str(i).zfill(3)}')
+    plt.show()
 
-
-data = load_data()
-for i in range(len(data)):
-    mat = interaction_mat(100, 10, data[i])
-    print(f"Matrice du film {i+1}\n", mat)
-    mat2graph(mat, i+1)
+if __name__ == '__main__':
+    data = load_data()
+    viz_traj(data[0])
+    # for i in range(len(data)):
+    #     mat = interaction_mat(100, 10, data[i])
+    #     print(f"Matrice du film {i+1}\n", mat)
+    #     mat2graph(mat, i+1)
