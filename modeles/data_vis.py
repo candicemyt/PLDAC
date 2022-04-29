@@ -67,9 +67,9 @@ def interaction_mat(distance, time, df):
     return mat_interactions
 
 
-def mat2graph(mat, titre):
+def mat2graph(mat, titre, plot=True):
     """
-    Cretion du graphe correspondant à la matrice mat et à titre
+    Creation du graphe correspondant à la matrice mat et à titre
     """
     rows, cols = np.where(mat > 0)
     edges = zip(rows.tolist(), cols.tolist())
@@ -83,21 +83,28 @@ def mat2graph(mat, titre):
     gr = nx.Graph()
     gr.add_nodes_from(nodes)
     gr.add_weighted_edges_from(weighted_edges)
-    dict_labels = ant_id2node_id(nodes)
-
-    plt.figure(figsize=(50,50))
-    ax = plt.gca()
-    ax.set_title(f"Graphe d'intéractions pour {titre}")
-    pos = nx.spring_layout(gr, k=1/np.sqrt(len(nodes)/4))
-    edge_labels = nx.get_edge_attributes(gr, 'weight')
-    nx.draw(gr, node_size=500, labels=dict_labels, with_labels=True, ax=ax, pos=pos)
-    nx.draw_networkx_edge_labels(gr, edge_labels=edge_labels, pos=pos)
-    plt.savefig(f'out/graphe_interactions/graphe_interactions_{titre}.pdf')
-    plt.show()
+    if plot:
+        plot_graph(gr, titre)
     return gr
 
 
-def viz_traj(df, titre):
+def plot_graph(gr, titre, show=False):
+    """
+    Plot et enregistrement de la visualisation du graphe gr
+    """
+    plt.figure(figsize=(10,10))
+    ax = plt.gca()
+    ax.set_title(f"Graphe d'intéractions pour {titre}")
+    pos = nx.spring_layout(gr, k=1/np.sqrt(len(gr.nodes)/4))
+    edge_labels = nx.get_edge_attributes(gr, 'weight')
+    nx.draw(gr, node_size=500, with_labels=True, ax=ax, pos=pos)
+    nx.draw_networkx_edge_labels(gr, edge_labels=edge_labels, pos=pos)
+    plt.savefig(f'out/graphe_interactions/graphe_interactions_{titre}.pdf')
+    if show:
+        plt.show()
+
+
+def viz_traj(df, titre, show=False):
     """
     Visualisation de trajectoires pour le dataset1
     """
@@ -112,12 +119,18 @@ def viz_traj(df, titre):
     ax.set_title(f"Trajectoires pour {titre}")
     ax.legend(handles=legends)
     plt.savefig(f'out/trajectoires/trajectoires_{titre}.pdf')
-    plt.show()
+    if show:
+        plt.show()
+
 
 if __name__ == '__main__':
-    data = load_data()
+    data = load_data('dataset1')
     for i in range(len(data)):
         mat = interaction_mat(100, 10, data[i])
-        print(f"Matrice du film {i+1}\n", mat)
+        #print(f"Matrice du film {i+1}\n", mat)
         mat2graph(mat, f'video {i + 1}')
         viz_traj(data[i], f'video {i+1}')
+    _, data = load_data('dataset2')
+    mat = np.delete(data[0][0].to_numpy(), 0, axis=1)
+
+    mat2graph(mat, 'dataset2_col1_day1')

@@ -17,10 +17,12 @@ def load_dataset1():
 def load_dataset2():
     data = []
     metadata = pd.read_csv('data/dataset2/metadata.csv')
-    for i in range(1,42):
-        data.append(pd.read_csv(f'data/dataset2/Colony4/day{i}.csv'))
+    for j in range(1,7):
+        col = []
+        for i in range(1,42):
+            col.append(pd.read_csv(f'data/dataset2/Colony{j}/day{i}.csv'))
+        data.append(col)
     return metadata, data
-
 
 
 def load_data(dataset):
