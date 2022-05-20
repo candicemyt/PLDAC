@@ -1,4 +1,4 @@
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, mutual_info_score
 from itertools import permutations
 import numpy as np
 from sklearn.cluster import SpectralClustering
@@ -80,7 +80,7 @@ def df2mat(colonies, days, metadata, data, queen=False):
     return matrices, ground_truth, list_ants
 
 
-def clustering(matrices, ground_truth, list_ants):
+def clustering(matrices, ground_truth, list_ants, scoring='acc'):
     """
     Spectral clustering depuis les matrices de comptage des interactions
     input:  matrices -> liste des matrices
@@ -93,6 +93,7 @@ def clustering(matrices, ground_truth, list_ants):
     predictions = []
 
     for mat, y_true, ants in zip(matrices, ground_truth, list_ants):
+        mat = mat + np.ones((mat.shape[0], mat.shape[1])) #l'algo de sklearn requiert un graphe complet
         #clustering en 3 groupes -> F, C, N
         clustering = SpectralClustering(n_clusters=3,assign_labels='discretize',affinity='precomputed')
         yhat = clustering.fit_predict(mat)
@@ -100,7 +101,11 @@ def clustering(matrices, ground_truth, list_ants):
         y_pred = dict(sorted(y_pred.items(), key=lambda item: item[0]))
         y_true = dict(sorted(y_true.items(), key=lambda item: item[0]))
 
-        score, y_pred_sort = acc_score(list(y_true.values()), list(y_pred.values()))
+        if scoring == 'acc':
+            score, y_pred_sort = acc_score(list(y_true.values()), list(y_pred.values()))
+        elif scoring == 'mi':
+            score = mutual_info_score(list(y_true.values()), list(y_pred.values()))
+            y_pred_sort = []
         scores.append(score)
         predictions.append(dict(zip(ants, y_pred_sort)))
 

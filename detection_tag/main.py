@@ -9,3 +9,5 @@ for mat in liste_mat:
     if _id > -1:
         qr_codes.append(_id)
 print(qr_codes)
+
+#%%

@@ -1,13 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.filters import threshold_mean
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops, find_contours
-from skimage.morphology import closing, square
-from skimage.color import label2rgb, rgb2gray
+from skimage.measure import label, regionprops
 from skimage.io import imread, imshow
-from skimage.feature import canny, blob_log, corner_peaks, corner_harris, corner_subpix
-from skimage.transform import resize, warp_coords, rotate
+from skimage.transform import rotate
 from math import pi
 
 def split(qr_code_image_rotate,col=6,lin=7):
