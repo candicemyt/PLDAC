@@ -88,7 +88,7 @@ def mat2graph(mat, titre, plot=True):
     return gr
 
 
-def plot_graph(gr, titre, show=False, self_loop=False):
+def plot_graph(gr, titre, show=False, self_loop=False, edge_labels=False):
     """
     Plot et enregistrement de la visualisation du graphe gr
     """
@@ -98,10 +98,12 @@ def plot_graph(gr, titre, show=False, self_loop=False):
     ax = plt.gca()
     ax.set_title(f"Graphe d'intéractions pour {titre}")
     pos = nx.spring_layout(gr, k=1/np.sqrt(len(gr.nodes)/4))
-    edge_labels = nx.get_edge_attributes(gr, 'weight')
-    #nx.draw_networkx_edge_labels(gr, edge_labels=edge_labels, pos=pos)
+    dict_edge_labels = nx.get_edge_attributes(gr, 'weight')
+    dict_edge_labels = {k : round(v,2) for k,v in dict_edge_labels.items()}
+    if edge_labels:
+        nx.draw_networkx_edge_labels(gr, edge_labels=dict_edge_labels, pos=pos)
     for edge in gr.edges(data='weight'):
-        nx.draw_networkx_edges(gr, pos, edgelist=[edge], width=edge[2]/np.sum(list(edge_labels.values()))*10)
+        nx.draw_networkx_edges(gr, pos, edgelist=[edge], width=edge[2] / np.sum(list(dict_edge_labels.values())) * 20)
     nx.draw(gr, node_size=400, with_labels=True, labels={0:'F', 1:'C', 2:'N', 3:'Q'}, ax=ax, pos=pos)
     plt.savefig(f'out/graphe_interactions/graphe_interactions_{titre}.pdf')
     if show:
