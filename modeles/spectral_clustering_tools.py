@@ -74,7 +74,7 @@ def df2mat(colonies, days, metadata, data, queen=False):
             if queen:
                 for a in (df_by_col[df_by_col[f'group_period{num_period}'] == 'Q'])['Ant_ID']:
                     if a in ants:
-                        y_true[a] = 4   #on label la reine 4
+                        y_true[a] = 3   #on label la reine 3
             ground_truth.append(y_true)
 
     return matrices, ground_truth, list_ants

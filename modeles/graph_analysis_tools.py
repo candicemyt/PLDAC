@@ -49,7 +49,7 @@ def add_queen(mat, pred, ants, metadata, day, col, df):
 
     if queen_id:
         ants.append(queen_id[0])
-        pred[queen_id[0]] = 4
+        pred[queen_id[0]] = 3
 
         i = df.index[df['Unnamed: 0'] == queen_id[0]].tolist()
         df = df.drop(i)

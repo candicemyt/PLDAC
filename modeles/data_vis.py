@@ -84,15 +84,16 @@ def mat2graph(mat, titre, plot=True):
     gr.add_nodes_from(nodes)
     gr.add_weighted_edges_from(weighted_edges)
     if plot:
-        plot_graph(gr, titre)
+        plot_graph(gr, titre, show=True)
     return gr
 
 
-def plot_graph(gr, titre, show=False):
+def plot_graph(gr, titre, show=False, self_loop=False):
     """
     Plot et enregistrement de la visualisation du graphe gr
     """
-    gr.remove_edges_from(nx.selfloop_edges(gr))
+    if not self_loop:
+        gr.remove_edges_from(nx.selfloop_edges(gr))
     plt.figure(figsize=(10,10))
     ax = plt.gca()
     ax.set_title(f"Graphe d'intéractions pour {titre}")
@@ -100,8 +101,8 @@ def plot_graph(gr, titre, show=False):
     edge_labels = nx.get_edge_attributes(gr, 'weight')
     #nx.draw_networkx_edge_labels(gr, edge_labels=edge_labels, pos=pos)
     for edge in gr.edges(data='weight'):
-        nx.draw_networkx_edges(gr, pos, edgelist=[edge], width=edge[2] // 20)
-    nx.draw(gr, node_size=100, with_labels=True, ax=ax, pos=pos)
+        nx.draw_networkx_edges(gr, pos, edgelist=[edge], width=edge[2]/np.sum(list(edge_labels.values()))*10)
+    nx.draw(gr, node_size=400, with_labels=True, labels={0:'F', 1:'C', 2:'N', 3:'Q'}, ax=ax, pos=pos)
     plt.savefig(f'out/graphe_interactions/graphe_interactions_{titre}.pdf')
     if show:
         plt.show()
