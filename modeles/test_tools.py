@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 def trainset(col, period, metadata):
     metadata_wo_col1 = metadata[metadata['colony_act'] != col] #on entraine sur toutes les colonies sauf col
@@ -51,14 +51,26 @@ def testset(col, period, metadata):
     return datax_test, datay_test
 
 
-def crossvalidation(clf, metadata):
+def crossvalidation(clf, metadata, val='test'):
 
-    scores = []
+    accuracy = []
+    precision = []
+    recall = []
     for col in range(1,7):
         datax_train, datay_train = trainset(col, 1, metadata)
         datax_test, datay_test = testset(col, 1, metadata)
         clf.fit(datax_train, datay_train)
-        yhat = clf.predict(datax_test)
-        score = accuracy_score(datay_test, yhat)
-        scores.append(score)
-    return scores
+        if val == 'test':
+            yhat = clf.predict(datax_test)
+            accuracy.append(accuracy_score(datay_test, yhat))
+            precision.append(precision_score(datay_test, yhat, average='micro'))
+            recall.append(recall_score(datay_test, yhat, average='micro'))
+
+        else:
+            yhat = clf.predict(datax_train)
+            accuracy.append(accuracy_score(datay_train, yhat))
+            precision.append(precision_score(datay_train, yhat, average='micro'))
+            recall.append(recall_score(datay_train, yhat, average='micro'))
+
+    return accuracy, precision, recall
+
