@@ -186,8 +186,8 @@ if __name__ == 'main':
     ############ etude des qr codes optimaux #############
 
     # for h_distance in range(2,5):
-
-
+    #
+    #
     #     for nb_bit in [6,8,9]:
     #         id_qr_code, qr_codes = qrcode(h_distance, nb_bit)
     #         print('---------------\t', nb_bit, ' bits avec une hamming distance de ', h_distance, '\t---------------\n')
@@ -196,7 +196,7 @@ if __name__ == 'main':
     #         for qr_code in qr_codes:
     #             f.write(str(qr_code) +'\n')
     #         #print(id_qr_code, '\n', qr_codes,'\n\n')
-
-
+    #
+    #
     # id_qr_code, qr_codes = qrcode(6, 8)
     # print('\t ', len(id_qr_code), ' QR codes\n')

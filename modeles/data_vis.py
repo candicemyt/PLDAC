@@ -80,7 +80,7 @@ def mat2graph(mat, titre, plot=True):
             weighted_edges.append((r, c, w))
     nodes = np.arange(np.shape(mat)[0])
 
-    gr = nx.Graph()
+    gr = nx.MultiDiGraph()
     gr.add_nodes_from(nodes)
     gr.add_weighted_edges_from(weighted_edges)
     if plot:
@@ -88,26 +88,56 @@ def mat2graph(mat, titre, plot=True):
     return gr
 
 
-def plot_graph(gr, titre, show=False, self_loop=False, edge_labels=False):
+def plot_graph(gr, titre, show=False, self_loop=False, edge_labels=False, arrows=False):
     """
     Plot et enregistrement de la visualisation du graphe gr
     """
     if not self_loop:
         gr.remove_edges_from(nx.selfloop_edges(gr))
-    plt.figure(figsize=(10,10))
+
+    size = 5
+    plt.figure(figsize=(size, size))
+
     ax = plt.gca()
-    ax.set_title(f"Graphe d'intéractions pour {titre}")
-    pos = nx.spring_layout(gr, k=1/np.sqrt(len(gr.nodes)/4))
+    #ax.set_title(f"Graphe d'intéractions pour {titre}")
+    pos = {0: (size/2, 3), 1: ((1/3)*size, size - (1/3)*size), 2: (size - (1/3)*size, size - (1/3)*size), 3: (size/2, size/2)}
     dict_edge_labels = nx.get_edge_attributes(gr, 'weight')
-    dict_edge_labels = {k : round(v,2) for k,v in dict_edge_labels.items()}
-    if edge_labels:
-        nx.draw_networkx_edge_labels(gr, edge_labels=dict_edge_labels, pos=pos)
+
     for edge in gr.edges(data='weight'):
-        nx.draw_networkx_edges(gr, pos, edgelist=[edge], width=edge[2] / np.sum(list(dict_edge_labels.values())) * 20)
-    nx.draw(gr, node_size=400, with_labels=True, labels={0:'F', 1:'C', 2:'N', 3:'Q'}, ax=ax, pos=pos)
-    plt.savefig(f'out/graphe_interactions/graphe_interactions_{titre}.pdf')
+        nx.draw_networkx_edges(gr, pos, edgelist=[edge], arrows=arrows, width=edge[2] / np.sum(list(dict_edge_labels.values())) * 20)
+
+
+    nx.draw(gr, node_size=400, with_labels=True, labels={0: 'F', 1: 'C', 2: 'N', 3: 'Q'}, ax=ax, pos=pos)
+    plt.savefig(f'out/graphe_interactions/graphe_interactions_{titre}.png')
+
     if show:
         plt.show()
+
+
+def plot_markov(mat):
+    """
+    Plot et enregistrement de la visualisation de la chaine de markov representee par la matrice mat
+    """
+    states=[]
+    G = nx.MultiDiGraph()
+    labels={}
+    edge_labels={}
+    for i in range(len(mat[0])):
+        for j in range(len(mat[0])):
+            if mat[i,j] != 0:
+                G.add_edge(i, j, weight=mat[i,j], label="{:.02f}".format(mat[i,j]))
+                edge_labels[(i, j)] = label="{:.02f}".format(mat[i,j])
+
+    size = 5
+    plt.figure(figsize=(size, size))
+    pos = {0: (size/2, 3), 1: ((1/3)*size, size - (1/3)*size), 2: (size - (1/3)*size, size - (1/3)*size), 3: (size/2, size/2)}
+    nx.draw_networkx_edges(G,pos,width=1.0,alpha=0.5)
+    nx.draw_networkx_labels(G, pos, font_weight=2)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels)
+    nx.draw_networkx_nodes(G, pos, label={0: 'F', 1: 'C', 2: 'N', 3: 'Q'}, node_size=400)
+
+
+    plt.axis('off')
 
 
 def viz_traj(df, titre, show=False):

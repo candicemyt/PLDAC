@@ -12,16 +12,13 @@ def trainset(col, period, metadata):
                                            #nb_interaction_cleaners=metadata_wo_col1['nb_interaction_cleaners'],
                                            #nb_interaction_foragers=metadata_wo_col1['nb_interaction_foragers'],
                                            nb_interactions_queen=metadata_wo_col1['nb_interaction_queen'])
-    df_datax_train.dropna()
-
-    df_datay_train = pd.DataFrame().assign(group_period1=metadata_wo_col1["group_period1"],
-                                           group_period2=metadata_wo_col1["group_period2"],
-                                           group_period3=metadata_wo_col1["group_period3"],
-                                           group_period4=metadata_wo_col1["group_period4"])
-    df_datay_train.dropna()
-
+    df_datax_train = df_datax_train.dropna()
     datax_train = df_datax_train.to_numpy()
-    datay_train = df_datay_train[f'group_period{period}'].to_numpy()
+
+    df_datay_train = pd.DataFrame().assign(group_period1=metadata_wo_col1[f"group_period{period}"])
+    df_datay_train = df_datay_train.dropna()
+    datay_train = df_datay_train.to_numpy()
+    datay_train = datay_train.reshape(datay_train.shape[0])
 
     return datax_train, datay_train
 
@@ -37,16 +34,13 @@ def testset(col, period, metadata):
                                           # #nb_interaction_cleaners=metadata_col1['nb_interaction_cleaners'],
                                           #nb_interaction_foragers=metadata_col1['nb_interaction_foragers'],
                                           nb_interactions_queen=metadata_col1['nb_interaction_queen'])
-    df_datax_test.dropna()
-
-    df_datay_test = pd.DataFrame().assign(group_period1=metadata_col1["group_period1"],
-                                          group_period2=metadata_col1["group_period2"],
-                                          group_period3=metadata_col1["group_period3"],
-                                          group_period4=metadata_col1["group_period4"])
-    df_datay_test.dropna()
-
+    df_datax_test = df_datax_test.dropna()
     datax_test = df_datax_test.to_numpy()
-    datay_test = df_datay_test[f'group_period{period}'].to_numpy()
+
+    df_datay_test = pd.DataFrame().assign(group_period1=metadata_col1[f"group_period{period}"])
+    df_datay_test = df_datay_test.dropna()
+    datay_test = df_datay_test.to_numpy()
+    datay_test = datay_test.reshape(datay_test.shape[0])
 
     return datax_test, datay_test
 
