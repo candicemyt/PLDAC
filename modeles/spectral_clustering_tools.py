@@ -1,7 +1,8 @@
-from sklearn.metrics import accuracy_score, mutual_info_score
+from sklearn.metrics import accuracy_score, mutual_info_score, rand_score, homogeneity_score, completeness_score, fowlkes_mallows_score
 from itertools import permutations
 import numpy as np
 from sklearn.cluster import SpectralClustering
+import pandas as pd
 
 def acc_score(groups, pred_groups):
     """
@@ -89,8 +90,8 @@ def clustering(matrices, ground_truth, list_ants, scoring='acc'):
     output: scores -> liste des scores d'accuracy des clustering
             predictions -> liste des dictionnaires de prédictions Ant_ID : num groupe
     """
-    scores = []
     predictions = []
+    df_scores = pd.DataFrame(columns=['accuracy', 'mutual information', 'rand index', 'homogeneity', 'completeness', 'fmi'])
 
     for mat, y_true, ants in zip(matrices, ground_truth, list_ants):
         mat = mat + np.ones((mat.shape[0], mat.shape[1])) #l'algo de sklearn requiert un graphe complet
@@ -101,12 +102,14 @@ def clustering(matrices, ground_truth, list_ants, scoring='acc'):
         y_pred = dict(sorted(y_pred.items(), key=lambda item: item[0]))
         y_true = dict(sorted(y_true.items(), key=lambda item: item[0]))
 
-        if scoring == 'acc':
-            score, y_pred_sort = acc_score(list(y_true.values()), list(y_pred.values()))
-        elif scoring == 'mi':
-            score = mutual_info_score(list(y_true.values()), list(y_pred.values()))
-            y_pred_sort = []
-        scores.append(score)
+        score_acc, y_pred_sort = acc_score(list(y_true.values()), list(y_pred.values()))
         predictions.append(dict(zip(ants, y_pred_sort)))
 
-    return scores, predictions
+
+        df_scores.loc[len(df_scores.index)] = [score_acc, mutual_info_score(list(y_true.values()), list(y_pred.values())),
+                                               rand_score(list(y_true.values()), list(y_pred.values())),
+                                               homogeneity_score(list(y_true.values()), list(y_pred.values())),
+                                               completeness_score(list(y_true.values()), list(y_pred.values())),
+                                               fowlkes_mallows_score(list(y_true.values()), list(y_pred.values()))]
+
+    return df_scores, predictions
