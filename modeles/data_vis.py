@@ -99,7 +99,7 @@ def plot_graph(gr, titre, show=False, self_loop=False, edge_labels=False, arrows
     plt.figure(figsize=(size, size))
 
     ax = plt.gca()
-    #ax.set_title(f"Graphe d'intéractions pour {titre}")
+    ax.set_title(f"Graphe d'intéractions pour {titre}")
     pos = {0: (size/2, 3), 1: ((1/3)*size, size - (1/3)*size), 2: (size - (1/3)*size, size - (1/3)*size), 3: (size/2, size/2)}
     dict_edge_labels = nx.get_edge_attributes(gr, 'weight')
 
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     data = load_data('dataset1')
     for i in range(len(data)):
         mat = interaction_mat(100, 10, data[i])
-        #print(f"Matrice du film {i+1}\n", mat)
+        print(f"Matrice du film {i+1}\n", mat)
         mat2graph(mat, f'video {i + 1}')
         viz_traj(data[i], f'video {i+1}')
     _, data = load_data('dataset2')

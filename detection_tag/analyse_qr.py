@@ -1,8 +1,8 @@
 import numpy as np
 from generation_qrcode.generate_qr_codes import binary_qrcode
 
-id_qr_code, valid_codes =binary_qrcode(3, 8)
 
+id_qr_code, valid_codes =binary_qrcode(3, 8)
 
 def bit_parity(qr_code):
     """renvoie les bits de parité pour une matrice identité"""
@@ -19,6 +19,7 @@ def bit_parity(qr_code):
         else:
             parity.append(1)
     return parity
+
 
 def correction(qr_code_analyse,err):
     """
@@ -72,6 +73,7 @@ def erreurs(qr_code_analyse):
         erreurs.append(1)
     return erreurs
 
+
 def in_liste_valide(qr_code_analyse):
     """
     Détermine si un qr_code est dans la liste de QR codes valides
@@ -80,6 +82,7 @@ def in_liste_valide(qr_code_analyse):
         if valid_codes[i] == qr_code_analyse:
             return i
     return -1
+
 
 def analyse_unidirectionnel(qr_code):
     """
@@ -110,6 +113,7 @@ def analyse_unidirectionnel(qr_code):
         if c >= 0:
             return c
     return -1
+
 
 def analyse(qr_code):
     """

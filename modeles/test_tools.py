@@ -8,9 +8,6 @@ def trainset(col, period, metadata):
                                            visits_to_brood=metadata_wo_col1["visits_to_brood"],
                                            visits_to_nest_entrance=metadata_wo_col1['visits_to_nest_entrance'],
                                            visits_to_rubbishpile=metadata_wo_col1['visits_to_rubbishpile'],
-                                           #nb_interaction_nurses=metadata_wo_col1['nb_interaction_nurses'],
-                                           #nb_interaction_cleaners=metadata_wo_col1['nb_interaction_cleaners'],
-                                           #nb_interaction_foragers=metadata_wo_col1['nb_interaction_foragers'],
                                            nb_interactions_queen=metadata_wo_col1['nb_interaction_queen'])
     df_datax_train = df_datax_train.dropna()
     datax_train = df_datax_train.to_numpy()
@@ -30,9 +27,6 @@ def testset(col, period, metadata):
                                           visits_to_brood=metadata_col1["visits_to_brood"],
                                           visits_to_nest_entrance=metadata_col1['visits_to_nest_entrance'],
                                           visits_to_rubbishpile=metadata_col1['visits_to_rubbishpile'],
-                                          #nb_interaction_nurses=metadata_col1['nb_interaction_nurses'],
-                                          # #nb_interaction_cleaners=metadata_col1['nb_interaction_cleaners'],
-                                          #nb_interaction_foragers=metadata_col1['nb_interaction_foragers'],
                                           nb_interactions_queen=metadata_col1['nb_interaction_queen'])
     df_datax_test = df_datax_test.dropna()
     datax_test = df_datax_test.to_numpy()
@@ -46,7 +40,6 @@ def testset(col, period, metadata):
 
 
 def crossvalidation(clf, metadata, val='test'):
-
     accuracy = []
     precision = []
     recall = []

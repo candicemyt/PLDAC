@@ -1,7 +1,9 @@
 import numpy as np
 
 def markov_chain(metadata, colony):
-
+    """
+    Création d'une chaine de markov par comptage du nombre de changements de rôles dans metadata
+    """
     grouptoindex = {'F':0, 'C' :1, 'N':2, 'Q':3}
     mat_A = np.zeros((4,4))
     df_by_col = metadata[metadata['colony_act'] == colony]

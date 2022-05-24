@@ -1,7 +1,7 @@
 from detection import *
 from analyse_qr import analyse
 
-#liste_mat  = detection("images_tests/QR_reel_test.png")
+
 liste_mat  = detection("images_tests/4tagsfourmis.png")
 qr_codes=[]
 for mat in liste_mat:
@@ -10,4 +10,4 @@ for mat in liste_mat:
         qr_codes.append(_id)
 print(qr_codes)
 
-#%%
+

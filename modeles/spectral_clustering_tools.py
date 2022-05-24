@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.cluster import SpectralClustering
 import pandas as pd
 
+
 def acc_score(groups, pred_groups):
     """
     Calcul du score d'accuracy et renvoie les prédictions modifiées avec 0=F, 1=C et 2=N
